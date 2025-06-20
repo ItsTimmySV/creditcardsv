@@ -9,13 +9,15 @@
 <body class="sidebar-closed">
     <!-- Sidebar - Ahora es un elemento de nivel superior en el body -->
     <aside id="sidebar">
-        <nav>
-            <ul>
-                <li><strong class="sidebar-title">Mis Tarjetas</strong></li>
-            </ul>
+        <div class="sidebar-header">
+            <strong class="sidebar-title">Mis Tarjetas</strong>
+        </div>
+        <nav class="sidebar-nav">
             <ul id="sidebar-card-list">
                 <!-- Card list items will be injected here -->
             </ul>
+        </nav>
+        <div class="sidebar-footer">
             <div class="sidebar-actions">
                 <button id="add-card-btn-sidebar" class="outline">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
@@ -27,7 +29,7 @@
                 <button id="export-btn" class="secondary">Exportar</button>
                 <input type="file" id="import-file" accept=".json" style="display: none;">
             </div>
-        </nav>
+        </div>
     </aside>
 
     <!-- Nuevo contenedor para todo el contenido principal que se moverá -->
