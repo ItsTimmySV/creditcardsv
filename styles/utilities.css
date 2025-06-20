@@ -1,0 +1,25 @@
+/* Utility Styles */
+
+.hidden {
+    display: none !important;
+}
+
+.no-cards-message,
+.select-card-message,
+.no-installments-message {
+    padding: 2.5rem;
+    text-align: center;
+    color: var(--secondary-text);
+    border: 1px dashed var(--pico-border-color);
+    border-radius: var(--pico-card-border-radius);
+    background-color: var(--pico-card-background-color);
+    margin-bottom: var(--pico-spacing);
+    box-shadow: var(--pico-card-box-shadow);
+}
+.no-cards-message p,
+.select-card-message p,
+.no-installments-message p {
+    margin-bottom: 0;
+    font-size: 1.15em;
+    line-height: 1.5;
+}

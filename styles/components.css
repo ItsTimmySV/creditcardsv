@@ -1,0 +1,450 @@
+/* Component Styles: Summary, Cards, Transactions, Installments */
+
+/* Summary */
+#summary .grid {
+    gap: var(--pico-spacing);
+    margin-bottom: var(--pico-spacing);
+    /* Ensure responsiveness on smaller screens with auto-fit and minmax */
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+}
+
+/* Explicitly set to 3 columns on larger desktop screens for a consistent look */
+@media (min-width: 992px) { /* Pico's 'lg' breakpoint is a good choice for desktop */
+    #summary .grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+#summary article {
+    text-align: center;
+    padding: 1.5rem 1rem; /* More vertical padding */
+    margin-bottom: 0;
+    border-radius: var(--pico-card-border-radius);
+    box-shadow: var(--pico-card-box-shadow);
+    background-color: var(--pico-card-background-color);
+    border: 1px solid var(--pico-card-border-color);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+#summary article:hover {
+    transform: translateY(-3px); /* Subtle hover lift */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+#summary article h4 {
+    font-size: 2.2em; /* Larger, more impactful numbers */
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+    font-weight: 700; /* Bolder */
+    color: var(--pico-primary); /* Primary color for numbers */
+}
+#summary article h6 {
+    font-size: 1em; /* Slightly larger heading */
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--secondary-text);
+}
+
+/* Card Styles */
+.card {
+    background-color: var(--pico-card-background-color); 
+    border: 1px solid var(--pico-card-border-color); 
+    border-radius: var(--pico-card-border-radius);
+    margin-bottom: var(--pico-spacing);
+    box-shadow: var(--pico-card-box-shadow);
+    overflow: hidden; 
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--pico-spacing);
+    border-bottom: 1px solid var(--pico-border-color); 
+    background-color: var(--pico-background-color); /* Match header's slightly darker background */
+}
+
+.card-title h5 {
+    margin: 0;
+    font-size: 1.4em; /* Larger card alias */
+    font-weight: 700;
+    color: var(--pico-color);
+}
+.card-title p {
+    margin: 0;
+    font-size: 0.9em;
+    color: var(--secondary-text);
+}
+
+.card-actions {
+    display: flex;
+    gap: 10px; /* Slightly more space between buttons */
+}
+.card-actions button {
+    border-radius: 50%; 
+    width: 40px; /* Larger circular buttons */
+    height: 40px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0; 
+    border: 1px solid var(--pico-border-color);
+    background-color: var(--pico-card-background-color);
+    color: var(--pico-color);
+    transition: all 0.2s ease;
+}
+.card-actions button:hover {
+    background-color: var(--pico-background-color);
+    transform: scale(1.05);
+}
+.card-actions button.secondary:hover {
+    border-color: var(--pico-primary);
+    color: var(--pico-primary);
+}
+.card-actions button.contrast:hover {
+    border-color: var(--danger-color);
+    color: var(--danger-color);
+}
+
+.card-actions button svg {
+    width: 1.3rem; /* Larger icons */
+    height: 1.3rem;
+    stroke: currentColor; /* Ensure SVG inherits color */
+}
+
+.card-body {
+    padding: var(--pico-spacing);
+}
+
+.card-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.8rem; /* More space */
+    margin-bottom: 1.8rem;
+    padding-bottom: 1.8rem;
+    border-bottom: 1px dashed var(--pico-border-color);
+}
+
+.summary-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.summary-item span {
+    font-size: 0.9em;
+    color: var(--secondary-text);
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.summary-item strong {
+    font-size: 1.8em; /* Larger summary numbers */
+    font-weight: 700;
+    color: var(--pico-color);
+}
+
+progress {
+    width: 100%;
+    height: 12px; /* Thicker progress bar */
+    border-radius: 6px;
+    -webkit-appearance: none;
+    appearance: none;
+    margin-bottom: 1.8rem;
+    overflow: hidden; 
+    background-color: var(--pico-border-color); /* Base color of the bar */
+}
+progress::-webkit-progress-bar {
+    background-color: transparent; /* Already set on parent */
+    border-radius: 6px;
+}
+progress::-webkit-progress-value {
+    background-color: var(--pico-primary);
+    border-radius: 6px;
+    transition: width 0.3s ease-out;
+}
+progress[value^="8"]::-webkit-progress-value {
+    background-color: var(--warning-color);
+}
+progress[value^="9"]::-webkit-progress-value,
+progress[value="100"]::-webkit-progress-value {
+    background-color: var(--danger-color);
+}
+
+.card-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--pico-border-color);
+}
+.card-details-grid div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+}
+.card-details-grid p {
+    margin: 0;
+    font-weight: 600; /* Slightly less bold than numbers */
+    font-size: 1.15em;
+    color: var(--pico-color);
+}
+.card-details-grid small {
+     color: var(--secondary-text);
+     font-size: 0.9em;
+     margin-bottom: 0.3rem;
+     text-transform: uppercase;
+     letter-spacing: 0.02em;
+}
+
+/* NEW: Buttons at the bottom of the card to open modals */
+.card-actions-bottom {
+    display: flex;
+    gap: 15px; /* More space */
+    justify-content: center; /* Center the buttons */
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--pico-border-color);
+}
+.card-actions-bottom button {
+    flex: 1; /* Allow buttons to take equal width */
+    max-width: 220px; /* Slightly wider buttons */
+    font-size: 0.95em;
+    padding: 10px 15px;
+    border-radius: var(--pico-border-radius);
+    font-weight: 600;
+    background-color: transparent; /* Outline style */
+    border: 1px solid var(--pico-primary);
+    color: var(--pico-primary);
+}
+.card-actions-bottom button:hover {
+    background-color: var(--pico-primary);
+    color: var(--pico-primary-inverse);
+    box-shadow: 0 4px 10px rgba(var(--pico-primary-rgb), 0.2);
+    transform: translateY(-2px);
+}
+
+/* Transaction and Installment tables/lists within modals */
+.modal-content-scroll {
+    max-height: 70vh; /* Allow content to scroll if too tall */
+    overflow-y: auto;
+    padding: 1rem 1.5rem; /* Consistent with modal padding */
+}
+
+.modal-content-scroll table {
+    width: 100%;
+    margin-bottom: 0; 
+    border-collapse: collapse; /* Collapse borders for a cleaner look */
+}
+.modal-content-scroll table th,
+.modal-content-scroll table td {
+    padding: 12px 15px; /* More padding */
+    text-align: left;
+    border-bottom: 1px solid var(--pico-border-color);
+    white-space: normal; /* Allow content to wrap */
+}
+.modal-content-scroll table th {
+    background-color: var(--pico-background-color); /* Match modal header */
+    font-size: 0.95em;
+    color: var(--secondary-text);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    position: sticky; /* Make headers stick */
+    top: 0;
+    z-index: 1;
+}
+.modal-content-scroll table tbody tr:last-child td {
+    border-bottom: none;
+}
+.modal-content-scroll table th:last-child,
+.modal-content-scroll table td:last-child {
+    width: 1%; 
+    white-space: nowrap; 
+    text-align: center; 
+}
+.modal-content-scroll table td:last-child {
+    text-align: center; 
+    width: 1%; /* Keep action column minimal */
+    white-space: nowrap; /* Prevent action buttons from wrapping */
+}
+.modal-content-scroll table th:last-child {
+    text-align: center;
+    width: 1%;
+    white-space: nowrap;
+}
+
+.transaction-delete-btn {
+    padding: 8px 12px; /* Adjust button size */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--pico-border-radius); 
+    border: 1px solid var(--danger-color);
+    background-color: transparent;
+    color: var(--danger-color);
+}
+.transaction-delete-btn:hover {
+    background-color: var(--danger-color);
+    color: var(--pico-primary-inverse);
+    box-shadow: 0 2px 5px rgba(var(--danger-color-rgb), 0.2);
+}
+.transaction-delete-btn svg {
+    width: 1rem;
+    height: 1rem;
+    stroke: currentColor;
+}
+
+/* Installment Specific Styles */
+.installment-tag {
+    background: var(--info-color);
+    color: var(--pico-primary-inverse);
+    padding: 3px 8px;
+    border-radius: 15px;
+    font-size: 0.75em;
+    margin-left: 8px;
+    font-weight: 600;
+}
+[data-theme="dark"] .installment-tag {
+    background: var(--pico-color-indigo-600);
+    color: var(--pico-color-indigo-100);
+}
+.payment-text {
+    color: var(--success-color);
+    font-weight: bold;
+}
+[data-theme="dark"] .payment-text {
+    color: var(--pico-color-green-400);
+}
+
+/* Installment Item Styles (used in modal now) */
+#modal-installments-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Center items in the list */
+    gap: var(--pico-spacing); /* Spacing between items */
+}
+
+.installment-item {
+    background-color: var(--pico-card-background-color);
+    border: 1px solid var(--pico-card-border-color);
+    border-radius: var(--pico-border-radius);
+    padding: 1.2rem; /* Increased padding */
+    position: relative; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    max-width: 100%; /* Ensure it doesn't overflow parent */
+    flex-basis: 300px; /* Allow items to grow/shrink but prefer a minimum size for wrapping */
+    flex-grow: 1; /* Allow items to fill available space */
+}
+.installment-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.installment-item h6 {
+    margin-top: 0;
+    margin-bottom: 1rem; /* More space */
+    font-size: 1.2em;
+    color: var(--pico-primary); 
+    font-weight: 700;
+}
+.installment-item .grid {
+    display: grid;
+    /* Dynamically adjust columns based on available space and minimum content width */
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem; /* Consistent gap */
+    margin-bottom: 1rem;
+}
+
+.installment-item .grid small {
+    font-size: 0.85em;
+    color: var(--secondary-text);
+    margin-bottom: 0.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+.installment-item .grid p {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.05em;
+    color: var(--pico-color);
+}
+.installment-item progress {
+    margin-top: 0.8rem;
+    margin-bottom: 1.2rem;
+    height: 10px; /* Slightly thicker progress bar */
+}
+.installment-item .installment-actions {
+    display: flex;
+    gap: 10px; /* Consistent gap */
+    justify-content: flex-end; /* Align to the right */
+    margin-top: 1rem; 
+    flex-wrap: wrap; /* Allow buttons to wrap to the next line if space is limited */
+}
+
+@media (max-width: 450px) {
+    .installment-item .installment-actions {
+        flex-direction: column; /* Stack buttons vertically on very small screens */
+        align-items: stretch; /* Make them full width */
+    }
+    .installment-item .installment-actions button {
+        width: 100%; /* Ensure buttons take full width when stacked */
+        margin-bottom: 0.5rem; /* Add some vertical spacing */
+    }
+    .installment-item .installment-actions button:last-child {
+        margin-bottom: 0; /* No margin after the last stacked button */
+    }
+}
+
+.installment-item .pay-installment-btn {
+    padding: 10px 15px;
+    font-size: 0.95em;
+    font-weight: 600;
+    border: 1px solid var(--pico-primary);
+    background-color: var(--pico-primary);
+    color: var(--pico-primary-inverse);
+}
+.installment-item .pay-installment-btn:hover:not([disabled]) {
+    background-color: var(--pico-primary-hover);
+    border-color: var(--pico-primary-hover);
+    box-shadow: 0 4px 10px rgba(var(--pico-primary-rgb), 0.2);
+    transform: translateY(-2px);
+}
+.installment-item .pay-installment-btn[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: var(--pico-border-color);
+    color: var(--secondary-text);
+    border-color: var(--pico-border-color);
+    box-shadow: none;
+    transform: none;
+}
+
+.installment-item .installment-delete-btn {
+    padding: 8px 12px; 
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--pico-border-radius);
+    border: 1px solid var(--danger-color);
+    background-color: transparent;
+    color: var(--danger-color);
+}
+.installment-item .installment-delete-btn:hover {
+    background-color: var(--danger-color);
+    color: var(--pico-primary-inverse);
+    box-shadow: 0 2px 5px rgba(var(--danger-color-rgb), 0.2);
+    transform: translateY(-2px);
+}
+.installment-item .installment-delete-btn svg {
+    width: 1rem;
+    height: 1rem;
+    stroke: currentColor;
+}

@@ -1,0 +1,106 @@
+/* Modal Styles */
+
+dialog article {
+    width: 95vw; /* Slightly wider modals */
+    max-width: 600px; /* Increased max-width */
+    border-radius: var(--pico-card-border-radius);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25); /* Stronger shadow */
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+    overflow: hidden; /* Ensure content respects border-radius */
+}
+dialog header {
+    border-bottom: 1px solid var(--pico-border-color);
+    background-color: var(--pico-background-color); /* Use a slightly different background for header */
+    padding: 1.2rem 1.8rem; /* Increased padding */
+    border-radius: var(--pico-card-border-radius) var(--pico-card-border-radius) 0 0;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+dialog header h3 {
+    margin: 0;
+    font-size: 1.6em; /* Larger title */
+    color: var(--pico-primary);
+    font-weight: 700;
+}
+dialog header .close {
+    text-decoration: none;
+    font-size: 1.8rem; /* Larger close icon */
+    line-height: 1;
+    color: var(--secondary-text);
+    transition: color 0.2s ease;
+}
+dialog header .close:hover {
+    color: var(--danger-color);
+}
+
+dialog form {
+    padding: 1.8rem; /* Increased padding */
+    flex-grow: 1; /* Allow form to take space */
+    overflow-y: auto; /* Scroll if form content is too long */
+}
+dialog form label {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--pico-color);
+}
+dialog form input, dialog form select {
+    margin-bottom: 1rem;
+}
+
+dialog footer {
+    border-top: 1px solid var(--pico-border-color);
+    padding: 1.2rem 1.8rem;
+    background-color: var(--pico-background-color); /* Match header background */
+    border-radius: 0 0 var(--pico-card-border-radius) var(--pico-card-border-radius);
+    flex-shrink: 0;
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+    gap: 10px;
+}
+dialog footer button {
+    padding: 10px 20px;
+    font-size: 1.05em;
+    font-weight: 600;
+}
+dialog footer button.secondary {
+    background-color: transparent;
+    color: var(--secondary-text);
+    border-color: var(--secondary-text);
+}
+dialog footer button.secondary:hover {
+    background-color: var(--pico-background-color-hover);
+    color: var(--pico-color);
+    border-color: var(--pico-color);
+}
+
+#installments-group {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--pico-border-color);
+}
+#installments-group label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+/* NEW: Styles for the new transaction and installment detail modals */
+.modal-content-scroll {
+    flex-grow: 1;
+    padding: 1.5rem 1.8rem; /* Increased horizontal padding for content */
+    overflow-y: auto;
+}
+#transaction-detail-modal #no-transactions-message,
+#installment-detail-modal #no-installments-message-modal {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    font-size: 1em;
+}
+
+/* Ensure buttons in modals are well-spaced and styled */
+dialog .grid {
+    gap: 1rem; /* Adjust grid gap for form elements */
+}
