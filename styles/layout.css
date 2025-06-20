@@ -140,11 +140,9 @@ body.sidebar-open #sidebar {
 }
 
 #sidebar-card-list {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 0 var(--pico-spacing); /* Horizontal padding */
-    margin-bottom: var(--pico-spacing); /* Space before actions */
-    border-bottom: 1px solid var(--pico-border-color);
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 #sidebar-card-list li {
@@ -187,24 +185,84 @@ body.sidebar-open #sidebar {
     border-color: var(--pico-primary-hover);
 }
 
-#sidebar .sidebar-title {
-    display: block;
-    padding: 10px 0;
-    margin-bottom: var(--pico-spacing);
+.sidebar-header {
+    flex-shrink: 0;
+    padding: 0 var(--pico-spacing);
+    padding-top: calc(60px + var(--pico-spacing)); /* Adjust for header height on mobile + spacing */
     border-bottom: 1px solid var(--pico-border-color);
+}
+
+.sidebar-title {
+    display: block;
+    margin: 0;
+    padding-bottom: var(--pico-spacing);
     color: var(--pico-primary);
     font-weight: bold;
     font-size: 1.2em;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    padding-top: calc(60px); /* Adjust for header height on mobile */
+}
+
+.sidebar-nav {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: var(--pico-spacing) var(--pico-spacing) 0;
+}
+
+#sidebar-card-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#sidebar-card-list li {
+    margin-bottom: 8px;
+}
+
+#sidebar-card-list .sidebar-card-item {
+    display: flex; /* Use flex for alignment */
+    align-items: center;
+    justify-content: space-between; /* Space for future icons maybe */
+    width: 100%;
+    text-align: left;
+    padding: 12px 15px;
+    background-color: var(--pico-card-background-color);
+    border: 1px solid var(--pico-card-border-color);
+    border-radius: var(--pico-border-radius);
+    color: var(--sidebar-text);
+    font-weight: 500;
+    font-size: 1.05em;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03); /* Subtle shadow for items */
+}
+
+#sidebar-card-list .sidebar-card-item:hover {
+    background-color: var(--pico-background-color); /* Lighter hover */
+    border-color: var(--pico-primary);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+#sidebar-card-list .sidebar-card-item.active {
+    background-color: var(--pico-primary);
+    border-color: var(--pico-primary);
+    color: var(--pico-primary-inverse);
+    box-shadow: 0 4px 12px rgba(var(--pico-primary-rgb), 0.25);
+    transform: translateY(-2px);
+}
+#sidebar-card-list .sidebar-card-item.active:hover {
+    background-color: var(--pico-primary-hover);
+    border-color: var(--pico-primary-hover);
+}
+
+.sidebar-footer {
+    flex-shrink: 0;
+    padding: 0;
+    border-top: 1px solid var(--pico-border-color);
 }
 
 .sidebar-actions {
-    padding: var(--pico-spacing); /* Add padding here */
-    padding-top: 0;
-    border-top: 1px solid var(--pico-border-color);
-    flex-shrink: 0; /* Prevent this part from shrinking */
+    padding: var(--pico-spacing);
 }
 
 #add-card-btn-sidebar {
@@ -241,10 +299,9 @@ body.sidebar-open #sidebar {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding: var(--pico-spacing); /* Add padding here */
+    padding: var(--pico-spacing);
+    padding-top: 0;
     border-top: 1px solid var(--pico-border-color);
-    margin-top: 0;
-    flex-shrink: 0; /* Prevent this part from shrinking */
 }
 
 .sidebar-utility button {
