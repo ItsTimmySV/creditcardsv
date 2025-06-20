@@ -68,8 +68,8 @@ header nav strong {
     cursor: pointer;
     padding: 5px;
     line-height: 1;
-    transition: transform 0.2s ease;
-    color: var(--pico-color); /* Ensure theme switcher icon color changes */
+    transition: transform 0.2s ease, color 0.2s ease; /* Add color transition */
+    color: var(--pico-color); /* Ensure theme switcher icon color changes with theme */
 }
 #theme-switcher:hover {
     transform: rotate(20deg) scale(1.1);
@@ -108,11 +108,11 @@ body.sidebar-open #page-content-wrapper {
     transform: translateX(-100%);
     transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease-in-out;
     z-index: 1000;
-    padding: var(--pico-spacing);
-    padding-top: calc(60px + var(--pico-spacing)); /* Adjust for new header height */
+    padding: 0; /* Remove padding from main container */
     display: flex;
     flex-direction: column;
     box-shadow: 2px 0 10px rgba(0,0,0,0.1); /* Subtle shadow when open */
+    overflow: hidden; /* Prevent parent from scrolling */
 }
 
 body.sidebar-open #sidebar {
@@ -125,6 +125,7 @@ body.sidebar-open #sidebar {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    height: 100%; /* Ensure nav takes full height of sidebar */
 }
 
 #sidebar nav ul {
@@ -133,10 +134,15 @@ body.sidebar-open #sidebar {
     margin: 0;
 }
 
+#sidebar nav > ul:first-of-type { /* Target only the "Mis Tarjetas" container */
+    padding: var(--pico-spacing) var(--pico-spacing) 0; /* Add padding here */
+    flex-shrink: 0; /* Prevent this part from shrinking */
+}
+
 #sidebar-card-list {
     flex-grow: 1;
     overflow-y: auto;
-    padding-bottom: var(--pico-spacing);
+    padding: 0 var(--pico-spacing); /* Horizontal padding */
     margin-bottom: var(--pico-spacing); /* Space before actions */
     border-bottom: 1px solid var(--pico-border-color);
 }
@@ -191,11 +197,14 @@ body.sidebar-open #sidebar {
     font-size: 1.2em;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    padding-top: calc(60px); /* Adjust for header height on mobile */
 }
 
 .sidebar-actions {
-    padding-top: var(--pico-spacing);
+    padding: var(--pico-spacing); /* Add padding here */
+    padding-top: 0;
     border-top: 1px solid var(--pico-border-color);
+    flex-shrink: 0; /* Prevent this part from shrinking */
 }
 
 #add-card-btn-sidebar {
@@ -232,9 +241,10 @@ body.sidebar-open #sidebar {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding-top: var(--pico-spacing);
+    padding: var(--pico-spacing); /* Add padding here */
     border-top: 1px solid var(--pico-border-color);
-    margin-top: var(--pico-spacing);
+    margin-top: 0;
+    flex-shrink: 0; /* Prevent this part from shrinking */
 }
 
 .sidebar-utility button {
@@ -281,8 +291,7 @@ body.sidebar-open #sidebar {
         box-shadow: none;
         width: 280px;
         flex-shrink: 0;
-        padding-top: var(--pico-spacing); /* Adjusted padding for desktop */
-        padding-bottom: var(--pico-spacing); /* Ensure bottom padding */
+        padding: 0; /* Remove padding for desktop sidebar */
         border-right: 1px solid var(--pico-border-color);
     }
     body.sidebar-open #sidebar {

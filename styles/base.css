@@ -40,31 +40,31 @@
 
 [data-theme="dark"] {
     /* Primary Color - Lighter blue for dark mode */
-    --pico-primary: #6ab0fa;
-    --pico-primary-hover: #3e81e3;
+    --pico-primary: #5a9edc;
+    --pico-primary-hover: #7eb4e8;
     --pico-primary-inverse: #000;
 
-    /* Background & Text Colors */
-    --pico-background-color: #2c313a; /* Dark background */
-    --pico-color: #e0e0e0; /* Light text */
-    --pico-border-color: #444c56; /* Darker borders */
+    /* Background & Text Colors - Darker, more "black" theme */
+    --pico-background-color: #121212; /* Very dark gray, near black */
+    --pico-color: #e4e6eb; /* Light gray for text */
+    --pico-border-color: #393e46; /* Darker borders */
     
-    /* Card Specifics */
-    --pico-card-background-color: #3a414c; /* Slightly lighter dark cards */
-    --pico-card-border-color: #495057; /* Darker card borders */
-    --pico-card-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    /* Card Specifics - Elevated surface color */
+    --pico-card-background-color: #1e1e1e; /* Slightly lighter than background */
+    --pico-card-border-color: #393e46; /* Matches border color */
+    --pico-card-box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 
     /* Secondary & Accent Colors */
-    --secondary-text: #95a5a6; /* Lighter muted gray */
-    --sidebar-bg: #3a414c; /* Dark sidebar background */
-    --sidebar-border-right: 1px solid #444c56;
+    --secondary-text: #adb5bd; /* Lighter muted gray */
+    --sidebar-bg: #1e1e1e; /* Matches card background */
+    --sidebar-border-right: 1px solid #393e46;
     --sidebar-text: var(--pico-color);
 
     /* Specific Status Colors for Dark Mode */
-    --success-color: #27ae60;
-    --danger-color: #c0392b;
-    --warning-color: #e67e22;
-    --info-color: #6ab0fa;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
 }
 
 body {

@@ -1,6 +1,9 @@
 /* Component Styles: Summary, Cards, Transactions, Installments */
 
 /* Summary */
+#summary {
+    margin-top: var(--pico-spacing); /* NEW: Add space between header and summary */
+}
 #summary .grid {
     gap: var(--pico-spacing);
     margin-bottom: var(--pico-spacing);
@@ -242,13 +245,15 @@ progress[value="100"]::-webkit-progress-value {
     width: 100%;
     margin-bottom: 0; 
     border-collapse: collapse; /* Collapse borders for a cleaner look */
+    table-layout: fixed; /* Force table to obey widths and prevent content from expanding it */
 }
 .modal-content-scroll table th,
 .modal-content-scroll table td {
-    padding: 12px 15px; /* More padding */
+    padding: 12px 10px; /* Adjust padding */
     text-align: left;
     border-bottom: 1px solid var(--pico-border-color);
     white-space: normal; /* Allow content to wrap */
+    word-break: break-word; /* Break long words to prevent overflow */
 }
 .modal-content-scroll table th {
     background-color: var(--pico-background-color); /* Match modal header */
@@ -263,6 +268,35 @@ progress[value="100"]::-webkit-progress-value {
 .modal-content-scroll table tbody tr:last-child td {
     border-bottom: none;
 }
+
+/* Explicitly set column widths for better control */
+.modal-content-scroll table th:nth-child(1), /* Fecha */
+.modal-content-scroll table td:nth-child(1) {
+    width: 25%;
+}
+
+.modal-content-scroll table th:nth-child(3), /* Monto */
+.modal-content-scroll table td:nth-child(3) {
+    width: 30%;
+    text-align: right; /* Right-align amounts for readability */
+    white-space: nowrap; /* Prevent amounts from wrapping */
+    padding-right: 15px; /* Add some padding to the right */
+}
+
+.modal-content-scroll table th:nth-child(4), /* Acciones */
+.modal-content-scroll table td:nth-child(4) {
+    width: 60px; /* Fixed width for action button */
+    text-align: center;
+}
+
+.modal-content-scroll table th:nth-child(3) { /* Monto Header */
+    text-align: right;
+    padding-right: 15px;
+}
+.modal-content-scroll table th:nth-child(4) { /* Acciones Header */
+    text-align: center;
+}
+
 .modal-content-scroll table th:last-child,
 .modal-content-scroll table td:last-child {
     width: 1%; 
@@ -281,7 +315,7 @@ progress[value="100"]::-webkit-progress-value {
 }
 
 .transaction-delete-btn {
-    padding: 8px 12px; /* Adjust button size */
+    padding: 8px; /* Adjust button size */
     display: inline-flex;
     align-items: center;
     justify-content: center;
