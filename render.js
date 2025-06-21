@@ -1,9 +1,9 @@
 import { formatCurrency, formatDate } from './utils.js';
 import { calculateCardDetails } from './calculations.js';
 
-// Function to attach event listeners specific to card actions (delete, add transaction, view transactions/installments)
+// Function to attach event listeners specific to card actions
 const setupCardActionListeners = (onDeleteCard, onAddTransaction, onCardSelect, onViewTransactions, onViewInstallments) => {
-    // Action buttons within the displayed card
+    // Main card detail actions
     document.querySelectorAll('[data-action="add-transaction"]').forEach(btn => {
         btn.onclick = (e) => {
             const cardId = e.currentTarget.closest('.card').dataset.cardId;
@@ -18,14 +18,12 @@ const setupCardActionListeners = (onDeleteCard, onAddTransaction, onCardSelect, 
             }
         };
     });
-    // NEW: View Transactions button
     document.querySelectorAll('[data-action="view-transactions"]').forEach(btn => {
         btn.onclick = (e) => {
             const cardId = e.currentTarget.closest('.card').dataset.cardId;
             onViewTransactions(cardId);
         };
     });
-    // NEW: View Installments button
     document.querySelectorAll('[data-action="view-installments"]').forEach(btn => {
         btn.onclick = (e) => {
             const cardId = e.currentTarget.closest('.card').dataset.cardId;
@@ -33,10 +31,10 @@ const setupCardActionListeners = (onDeleteCard, onAddTransaction, onCardSelect, 
         };
     });
 
-    // Event listeners for sidebar card selection (re-attached on each render)
-    document.querySelectorAll('.sidebar-card-item').forEach(btn => {
+    // Sidebar/list card selection
+    document.querySelectorAll('.card-list-item-button').forEach(btn => {
         btn.onclick = (e) => {
-            const cardId = e.currentTarget.dataset.cardId;
+            const cardId = e.currentTarget.closest('.card-list-item').dataset.cardId;
             onCardSelect(cardId);
         };
     });
@@ -77,8 +75,10 @@ export const setupInstallmentDeleteActionListeners = (containerEl, onDeleteInsta
 
 // NEW: Function to generate HTML for a single transaction row
 export const createTransactionRowHtml = (tx, cardId) => {
-    const amountClass = tx.type === 'payment' ? 'payment-text' : '';
-    const formattedAmount = tx.type === 'payment' ? `- ${formatCurrency(tx.amount)}` : formatCurrency(tx.amount);
+    const isPayment = tx.type === 'payment';
+    const amountClass = isPayment ? 'payment-text' : 'expense-text';
+    const amountSign = isPayment ? '-' : '+';
+    const formattedAmount = `${amountSign} ${formatCurrency(tx.amount)}`;
     
     // Filter out installment_purchase from main transaction list in the modal too
     if (tx.type === 'installment_purchase') return '';
@@ -87,13 +87,14 @@ export const createTransactionRowHtml = (tx, cardId) => {
         <tr>
             <td>${formatDate(tx.date)}</td>
             <td>${tx.description}</td>
-            <td class="${amountClass}">${formattedAmount}</td>
-            <td>
-                <button class="outline contrast small transaction-delete-btn" 
+            <td class="align-right ${amountClass}">${formattedAmount}</td>
+            <td class="align-center">
+                <button class="icon-button small danger" 
                     data-card-id="${cardId}" 
                     data-transaction-id="${tx.id}"
-                    data-action="delete-transaction">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                    data-action="delete-transaction"
+                    aria-label="Eliminar movimiento">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                 </button>
             </td>
         </tr>
@@ -104,38 +105,33 @@ export const createTransactionRowHtml = (tx, cardId) => {
 export const createInstallmentItemHtml = (inst, cardId) => {
     return `
         <article class="installment-item" data-installment-id="${inst.id}">
-            <h6>${inst.description}</h6>
-            <div class="grid">
-                <div>
-                    <small>Monto Original</small>
-                    <p>${formatCurrency(inst.totalAmount)}</p>
-                </div>
-                <div>
-                    <small>Mensualidad</small>
-                    <p>${formatCurrency(inst.monthlyPayment)}</p>
-                </div>
-                <div>
-                    <small>Pagado / Total Meses</small>
-                    <p>${inst.paidMonths} / ${inst.months}</p>
-                </div>
-                <div>
-                    <small>Saldo Restante</small>
-                    <p>${formatCurrency(inst.remainingAmount)}</p>
-                </div>
+            <div class="installment-item-header">
+                <h6>${inst.description}</h6>
+                <button class="icon-button small danger installment-delete-btn" 
+                    data-card-id="${cardId}" 
+                    data-installment-id="${inst.id}"
+                    data-action="delete-installment"
+                    aria-label="Eliminar compra a plazo">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                </button>
             </div>
-            <progress value="${inst.paidMonths}" max="${inst.months}"></progress>
+             <div class="installment-progress">
+                <div class="installment-progress-info">
+                    <span>${formatCurrency(inst.remainingAmount)} restantes</span>
+                    <span>${inst.paidMonths} / ${inst.months} meses</span>
+                </div>
+                <progress value="${inst.paidMonths}" max="${inst.months}"></progress>
+            </div>
+            <div class="installment-details">
+                <div><small>Monto Original</small><p>${formatCurrency(inst.totalAmount)}</p></div>
+                <div><small>Mensualidad</small><p>${formatCurrency(inst.monthlyPayment)}</p></div>
+            </div>
             <div class="installment-actions">
-                <button class="outline primary small pay-installment-btn" 
+                <button class="gradient-button small pay-installment-btn" 
                     data-card-id="${cardId}" 
                     data-installment-id="${inst.id}"
                     ${inst.paidMonths >= inst.months ? 'disabled' : ''}>
                     Pagar Mes ${inst.paidMonths + 1}
-                </button>
-                <button class="outline contrast small installment-delete-btn" 
-                    data-card-id="${cardId}" 
-                    data-installment-id="${inst.id}"
-                    data-action="delete-installment">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
                 </button>
             </div>
         </article>
@@ -143,58 +139,67 @@ export const createInstallmentItemHtml = (inst, cardId) => {
 };
 
 // Main render function for all content
-export const renderAppContent = (cards, selectedCardId, cardsContainer, sidebarCardListEl, cardTemplate, noCardsMessageEl, selectCardMessageEl, callbacks) => {
-    // 1. Render Sidebar Card List
+export const renderAppContent = (cards, selectedCardId, cardsContainer, sidebarCardListEl, cardTemplate, cardListItemTemplate, noCardsMessageEl, selectCardMessageEl, callbacks) => {
+    const cardDetailTitle = document.getElementById('card-detail-title');
+    
+    // 1. Render Card List
     sidebarCardListEl.innerHTML = '';
     cards.forEach(card => {
-        const listItem = document.createElement('li');
-        const button = document.createElement('button'); // Use button for better a11y
-        button.className = `sidebar-card-item ${card.id === selectedCardId ? 'active' : ''}`;
-        button.dataset.cardId = card.id;
-        button.textContent = card.alias;
-        listItem.appendChild(button);
-        sidebarCardListEl.appendChild(listItem);
+        const item = document.importNode(cardListItemTemplate.content, true);
+        const details = calculateCardDetails(card);
+        
+        item.querySelector('.card-list-item').dataset.cardId = card.id;
+        if (card.id === selectedCardId) {
+            item.querySelector('.card-list-item-button').classList.add('active');
+        }
+        item.querySelector('[data-id="alias"]').textContent = card.alias;
+        item.querySelector('[data-id="bank-last4"]').textContent = `${card.bank} - ${card.last4}`;
+        item.querySelector('[data-id="currentBalance"]').textContent = formatCurrency(details.currentBalance);
+        
+        sidebarCardListEl.appendChild(item);
     });
 
     // 2. Render Selected Card Details or appropriate message
-    cardsContainer.innerHTML = ''; // Clear previous card display
+    cardsContainer.innerHTML = '';
     const selectedCard = cards.find(c => c.id === selectedCardId);
+    
+    // Toggle visibility of sections based on state
+    const hasCards = cards.length > 0;
+    document.getElementById('summary').style.display = hasCards ? '' : 'none';
+    document.getElementById('card-detail-section').style.display = hasCards ? '' : 'none';
+    noCardsMessageEl.classList.toggle('hidden', hasCards);
+    selectCardMessageEl.classList.toggle('hidden', !hasCards || !!selectedCard);
+    cardsContainer.style.display = !!selectedCard ? '' : 'none';
 
-    if (cards.length === 0) {
-        noCardsMessageEl.classList.remove('hidden');
-        selectCardMessageEl.classList.add('hidden');
+    if (selectedCard) {
+        cardDetailTitle.textContent = selectedCard.alias;
+        const cardElement = document.importNode(cardTemplate.content, true);
+        const details = calculateCardDetails(selectedCard);
+        
+        cardElement.querySelector('.card').dataset.cardId = selectedCard.id;
+        cardElement.querySelector('[data-id="currentBalance"]').textContent = formatCurrency(details.currentBalance);
+        cardElement.querySelector('[data-id="availableCredit"]').textContent = formatCurrency(details.availableCredit);
+        cardElement.querySelector('[data-id="limit"]').textContent = formatCurrency(selectedCard.limit);
+        const creditUsage = selectedCard.limit > 0 ? (details.currentBalance / selectedCard.limit) * 100 : 0;
+        cardElement.querySelector('[data-id="credit-progress"]').value = creditUsage;
+        
+        cardElement.querySelector('[data-id="paymentForPeriod"]').textContent = formatCurrency(details.paymentForPeriod);
+        cardElement.querySelector('[data-id="nextPayment"]').textContent = formatCurrency(details.nextPayment);
+        cardElement.querySelector('[data-id="nextCutoffDate"]').textContent = details.nextCutoffDate;
+        cardElement.querySelector('[data-id="paymentDueDate"]').textContent = details.paymentDueDate;
+
+        cardsContainer.appendChild(cardElement);
     } else {
-        noCardsMessageEl.classList.add('hidden');
-        if (selectedCard) {
-            selectCardMessageEl.classList.add('hidden');
-            const cardElement = document.importNode(cardTemplate.content, true);
-            const details = calculateCardDetails(selectedCard);
-            
-            cardElement.querySelector('.card').dataset.cardId = selectedCard.id;
-            cardElement.querySelector('[data-id="alias"]').textContent = selectedCard.alias;
-            cardElement.querySelector('[data-id="bank-last4"]').textContent = `${selectedCard.bank} - **** ${selectedCard.last4}`;
-            cardElement.querySelector('[data-id="currentBalance"]').textContent = formatCurrency(details.currentBalance);
-            cardElement.querySelector('[data-id="availableCredit"]').textContent = formatCurrency(details.availableCredit);
-            cardElement.querySelector('[data-id="limit"]').textContent = formatCurrency(selectedCard.limit);
-            cardElement.querySelector('[data-id="credit-progress"]').value = (details.currentBalance / selectedCard.limit) * 100;
-            cardElement.querySelector('[data-id="paymentForPeriod"]').textContent = formatCurrency(details.paymentForPeriod);
-            cardElement.querySelector('[data-id="nextPayment"]').textContent = formatCurrency(details.nextPayment);
-            cardElement.querySelector('[data-id="nextCutoffDate"]').textContent = details.nextCutoffDate;
-            cardElement.querySelector('[data-id="paymentDueDate"]').textContent = details.paymentDueDate;
-
-            cardsContainer.appendChild(cardElement);
-        } else {
-            // No card selected or selected card was deleted
-            selectCardMessageEl.classList.remove('hidden');
-        }
+        cardDetailTitle.textContent = "Detalles de la Tarjeta";
     }
-    // Attach event listeners after rendering all (sidebar items AND current card)
+
+    // Attach event listeners after rendering all
     setupCardActionListeners(
         callbacks.onDeleteCard, 
         callbacks.onAddTransaction, 
         callbacks.onCardSelect,
-        callbacks.onViewTransactions, // NEW
-        callbacks.onViewInstallments  // NEW
+        callbacks.onViewTransactions,
+        callbacks.onViewInstallments
     );
 };
 

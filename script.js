@@ -13,9 +13,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const cardsContainer = document.getElementById('cards-container'); // Now displays single card
     const sidebarCardList = document.getElementById('sidebar-card-list'); // New: for sidebar card list
     const cardTemplate = document.getElementById('card-template');
+    const cardListItemTemplate = document.getElementById('card-list-item-template');
     const noCardsMessage = document.getElementById('no-cards-message');
+    const addCardFromEmptyStateBtn = document.getElementById('add-card-from-empty-state');
     const selectCardMessage = document.getElementById('select-card-message'); // New: message to select card
     const themeSwitcher = document.getElementById('theme-switcher');
+    const mobileThemeSwitcher = document.getElementById('mobile-theme-switcher');
     const exportBtn = document.getElementById('export-btn');
     const importBtn = document.getElementById('import-btn');
     const importFile = document.getElementById('import-file');
@@ -24,8 +27,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalDebtEl = document.getElementById('total-debt');
     const totalAvailableEl = document.getElementById('total-available');
     const totalLimitEl = document.getElementById('total-limit');
-    const menuToggle = document.getElementById('menu-toggle'); // New: Hamburger menu
     const addCardBtnSidebar = document.getElementById('add-card-btn-sidebar'); // New: Add card button in sidebar
+    
+    // NEW Mobile Nav Elements
+    const mobileNav = document.getElementById('mobile-nav');
+    const mobileNavBtns = document.querySelectorAll('.mobile-nav-btn');
+    const mobileAddCardBtn = document.getElementById('mobile-add-card-btn');
 
     // NEW Modal elements
     const transactionDetailModal = document.getElementById('transaction-detail-modal');
@@ -40,6 +47,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const installmentDetailCardIdInput = document.getElementById('installment-detail-card-id');
     const noInstallmentsMessageModal = document.getElementById('no-installments-message-modal');
 
+    // Layout Elements
+    const appLayout = document.getElementById('app-layout');
+    const mainContentPanel = document.getElementById('main-content-panel');
+    const cardListPanel = document.getElementById('card-list-panel');
+    const mobileHeaderTitle = document.getElementById('mobile-header-title');
+
     // State
     let cards = getCards();
     let selectedCardId = cards.length > 0 ? cards[0].id : null; // New: Track selected card for detail view
@@ -53,14 +66,12 @@ document.addEventListener('DOMContentLoaded', () => {
             cardsContainer,
             sidebarCardList,
             cardTemplate,
+            cardListItemTemplate,
             noCardsMessage,
             selectCardMessage,
             {
                 onDeleteCard: handleDeleteCard,
                 onAddTransaction: handleAddTransactionClick,
-                onPayInstallment: handlePayInstallment,
-                onDeleteTransaction: handleDeleteTransaction,
-                onDeleteInstallment: handleDeleteInstallment,
                 onCardSelect: handleCardSelection,
                 onViewTransactions: handleViewTransactionsClick, // NEW
                 onViewInstallments: handleViewInstallmentsClick // NEW
@@ -85,7 +96,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         updateUI();
-        closeSidebar(); // Close sidebar after adding/editing a card
+        // On mobile, switch back to the card list view after adding/editing a card
+        if (window.innerWidth < 992) {
+            switchMobileView('cards');
+        }
     };
 
     const handleDeleteCard = (cardId) => {
@@ -198,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const handleDeleteInstallment = (cardId, installmentId) => {
-        if (!confirm('¿Estás seguro de que quieres eliminar esta compra a plazo y todos los pagos asociados a ella? Esta acción no se puede rehacer.')) {
+        if (!confirm('¿Estás seguro de que quieres eliminar esta compra a plazo y todos los pagos asociados?')) {
             return;
         }
 
@@ -211,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
             );
 
             if (card.transactions.length < initialLength) {
-                alert('Compra a plazo y movimientos asociados eliminados con éxito.');
+                alert('Compra a plazo y movimientos asociados eliminados.');
                 updateUI();
                 // If the installment detail modal is open for this card, refresh its content
                 if (installmentDetailModal.open && installmentDetailCardIdInput.value === cardId) {
@@ -240,7 +254,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const handleCardSelection = (cardId) => {
         selectedCardId = cardId;
         updateUI();
-        closeSidebar(); // Close sidebar after selecting a card on mobile
+        if (window.innerWidth < 992) {
+            switchMobileView('home');
+        }
     };
 
     // Callback to pass to render.js for opening transaction modal
@@ -310,26 +326,50 @@ document.addEventListener('DOMContentLoaded', () => {
         installmentDetailModal.showModal();
     };
 
-    // --- SIDEBAR TOGGLE ---
-    const toggleSidebar = () => {
-        body.classList.toggle('sidebar-open');
+    // --- Mobile Navigation Logic ---
+    const switchMobileView = (view) => {
+        appLayout.dataset.view = view;
+        mobileNavBtns.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.view === view);
+        });
+        mobileHeaderTitle.textContent = view === 'home' ? 'Resumen' : 'Mis Tarjetas';
+        window.scrollTo(0, 0); // Scroll to top on view change
     };
 
-    const closeSidebar = () => {
-        body.classList.remove('sidebar-open');
-    };
-
-    // Close sidebar if clicking outside (on desktop sizes, this won't happen)
-    document.addEventListener('click', (e) => {
-        const sidebar = document.getElementById('sidebar');
-        const menuButton = document.getElementById('menu-toggle');
-        // Check if click is outside sidebar AND not on menu toggle, and sidebar is open
-        if (body.classList.contains('sidebar-open') && 
-            !sidebar.contains(e.target) && 
-            !menuButton.contains(e.target) &&
-            window.innerWidth < 768) { // Only for mobile view
-            closeSidebar();
+    mobileNavBtns.forEach(btn => {
+        btn.addEventListener('click', () => switchMobileView(btn.dataset.view));
+    });
+    
+    addCardFromEmptyStateBtn.addEventListener('click', () => {
+        if (openCardModalCallback) {
+            openCardModalCallback(); // Open 'add card' modal
         }
+    });
+
+    mobileAddCardBtn.addEventListener('click', () => {
+        if (openCardModalCallback) {
+            openCardModalCallback(); // Open 'add card' modal
+        }
+    });
+
+    // NEW: Setup close listeners for the new detail modals
+    setupModalClose(transactionDetailModal);
+    setupModalClose(installmentDetailModal);
+
+    // Event listeners for new UI elements
+    addCardBtnSidebar.addEventListener('click', () => {
+        if (openCardModalCallback) {
+            openCardModalCallback(); // Directly call the stored callback to open the modal
+        }
+    });
+
+    // NEW: Add event listener for modal close buttons
+    document.querySelectorAll('dialog').forEach(modal => {
+        modal.addEventListener('click', (e) => {
+            if (e.target.matches('.close') || e.target.hasAttribute('data-close-modal')) {
+                modal.close();
+            }
+        });
     });
 
     // --- INITIALIZE MODULES ---
@@ -340,21 +380,10 @@ document.addEventListener('DOMContentLoaded', () => {
         addTransactionModalCallback = callback; // Store the callback from modals.js for later use by render.js
     });
     setupThemeSwitcher(themeSwitcher);
-    setupDataImportExport(exportBtn, importBtn, importFile, cards, handleImportSuccess);
-
-    // NEW: Setup close listeners for the new detail modals
-    setupModalClose(transactionDetailModal);
-    setupModalClose(installmentDetailModal);
-
-    // Event listeners for new UI elements
-    menuToggle.addEventListener('click', toggleSidebar);
-    addCardBtnSidebar.addEventListener('click', () => {
-        if (openCardModalCallback) {
-            openCardModalCallback(); // Directly call the stored callback to open the modal
-        }
-        closeSidebar(); // Close sidebar after attempting to add a card
-    });
+    setupThemeSwitcher(mobileThemeSwitcher);
+    setupDataImportExport(exportBtn, importBtn, importFile, () => cards, handleImportSuccess);
 
     // Initial Render
+    switchMobileView('home'); // Set initial view for mobile
     updateUI();
 });
