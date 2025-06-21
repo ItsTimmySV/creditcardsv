@@ -1,367 +1,200 @@
-/* Layout Styles: Header, Sidebar, Main Content Structure */
+/* Layout Styles: Main Structure, Panels, Headers, Mobile Nav */
 
-header nav {
-    border-bottom: 1px solid var(--pico-border-color);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    background-color: var(--pico-card-background-color); /* Match card background for a unified look */
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    min-height: 60px; /* Slightly taller header */
+#app-layout {
+    display: grid;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+#card-list-panel {
+    background-color: var(--bg-color-2);
+    border-right: 1px solid var(--bg-color-3);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.panel-header, .mobile-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-}
-header nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-header nav ul:first-child {
-    margin-right: auto; /* Push second ul to the right */
-}
-header nav strong {
-    font-size: 1.3em;
-    color: var(--pico-primary);
-    font-weight: 700;
-}
-
-#menu-toggle-container {
-    display: block; /* Show hamburger on mobile by default */
-}
-
-#menu-toggle {
-    background: none;
-    border: none;
-    padding: 5px;
-    margin-right: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--pico-color);
-    transition: transform 0.2s ease, color 0.2s ease;
-}
-#menu-toggle svg {
-    stroke: var(--pico-color);
-    width: 28px; /* Slightly larger icon */
-    height: 28px;
-}
-#menu-toggle:hover {
-    transform: scale(1.05);
-    color: var(--pico-primary);
-}
-[data-theme="light"] #menu-toggle svg {
-    stroke: #333d47; /* Darker color for light mode */
-}
-[data-theme="dark"] #menu-toggle svg {
-    stroke: #e0e0e0; /* Lighter color for dark mode */
-}
-
-#theme-switcher {
-    font-size: 1.4rem; /* Larger icon */
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 5px;
-    line-height: 1;
-    transition: transform 0.2s ease, color 0.2s ease; /* Add color transition */
-    color: var(--pico-color); /* Ensure theme switcher icon color changes with theme */
-}
-#theme-switcher:hover {
-    transform: rotate(20deg) scale(1.1);
-}
-
-/* App Container (Sidebar + Main Content) */
-.app-container {
-    flex-grow: 1;
-    display: block;
-    min-height: calc(100vh - 60px); /* Adjust for new header height */
-    position: relative;
-}
-
-/* New wrapper to allow content to be pushed */
-#page-content-wrapper {
-    flex-grow: 1;
-    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smooth cubic bezier transition */
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-body.sidebar-open #page-content-wrapper {
-    transform: translateX(280px);
-}
-
-/* Sidebar */
-#sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 280px;
-    height: 100vh;
-    background-color: var(--sidebar-bg);
-    border-right: var(--sidebar-border-right);
-    transform: translateX(-100%);
-    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease-in-out;
-    z-index: 1000;
-    padding: 0; /* Remove padding from main container */
-    display: flex;
-    flex-direction: column;
-    box-shadow: 2px 0 10px rgba(0,0,0,0.1); /* Subtle shadow when open */
-    overflow: hidden; /* Prevent parent from scrolling */
-}
-
-body.sidebar-open #sidebar {
-    transform: translateX(0);
-    box-shadow: 2px 0 15px rgba(0,0,0,0.2); /* More prominent shadow when open */
-}
-
-#sidebar nav {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    height: 100%; /* Ensure nav takes full height of sidebar */
-}
-
-#sidebar nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-#sidebar nav > ul:first-of-type { /* Target only the "Mis Tarjetas" container */
-    padding: var(--pico-spacing) var(--pico-spacing) 0; /* Add padding here */
-    flex-shrink: 0; /* Prevent this part from shrinking */
-}
-
-#sidebar-card-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-#sidebar-card-list li {
-    margin-bottom: 8px;
-}
-
-#sidebar-card-list .sidebar-card-item {
-    display: flex; /* Use flex for alignment */
-    align-items: center;
-    justify-content: space-between; /* Space for future icons maybe */
-    width: 100%;
-    text-align: left;
-    padding: 12px 15px;
-    background-color: var(--pico-card-background-color);
-    border: 1px solid var(--pico-card-border-color);
-    border-radius: var(--pico-border-radius);
-    color: var(--sidebar-text);
-    font-weight: 500;
-    font-size: 1.05em;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.03); /* Subtle shadow for items */
-}
-
-#sidebar-card-list .sidebar-card-item:hover {
-    background-color: var(--pico-background-color); /* Lighter hover */
-    border-color: var(--pico-primary);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-    transform: translateY(-2px); /* Slight lift effect */
-}
-
-#sidebar-card-list .sidebar-card-item.active {
-    background-color: var(--pico-primary);
-    border-color: var(--pico-primary);
-    color: var(--pico-primary-inverse);
-    box-shadow: 0 4px 12px rgba(var(--pico-primary-rgb), 0.25);
-    transform: translateY(-2px);
-}
-#sidebar-card-list .sidebar-card-item.active:hover {
-    background-color: var(--pico-primary-hover);
-    border-color: var(--pico-primary-hover);
-}
-
-.sidebar-header {
+    padding: var(--spacing-md);
     flex-shrink: 0;
-    padding: 0 var(--pico-spacing);
-    padding-top: calc(60px + var(--pico-spacing)); /* Adjust for header height on mobile + spacing */
-    border-bottom: 1px solid var(--pico-border-color);
+}
+.panel-header {
+    border-bottom: 1px solid var(--bg-color-3);
+    height: 70px;
 }
 
-.sidebar-title {
-    display: block;
-    margin: 0;
-    padding-bottom: var(--pico-spacing);
-    color: var(--pico-primary);
-    font-weight: bold;
-    font-size: 1.2em;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+.panel-header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
 }
 
-.sidebar-nav {
+#sidebar-card-list-container {
+    padding: var(--spacing-sm);
     flex-grow: 1;
     overflow-y: auto;
-    padding: var(--pico-spacing) var(--pico-spacing) 0;
 }
 
 #sidebar-card-list {
     list-style: none;
-    padding: 0;
-    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
 }
 
-#sidebar-card-list li {
-    margin-bottom: 8px;
+.panel-footer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    border-top: 1px solid var(--bg-color-3);
+    background-color: var(--bg-color-1);
 }
-
-#sidebar-card-list .sidebar-card-item {
-    display: flex; /* Use flex for alignment */
-    align-items: center;
-    justify-content: space-between; /* Space for future icons maybe */
+.panel-footer button {
     width: 100%;
-    text-align: left;
-    padding: 12px 15px;
-    background-color: var(--pico-card-background-color);
-    border: 1px solid var(--pico-card-border-color);
-    border-radius: var(--pico-border-radius);
-    color: var(--sidebar-text);
-    font-weight: 500;
-    font-size: 1.05em;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.03); /* Subtle shadow for items */
 }
 
-#sidebar-card-list .sidebar-card-item:hover {
-    background-color: var(--pico-background-color); /* Lighter hover */
-    border-color: var(--pico-primary);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-    transform: translateY(-2px); /* Slight lift effect */
-}
 
-#sidebar-card-list .sidebar-card-item.active {
-    background-color: var(--pico-primary);
-    border-color: var(--pico-primary);
-    color: var(--pico-primary-inverse);
-    box-shadow: 0 4px 12px rgba(var(--pico-primary-rgb), 0.25);
-    transform: translateY(-2px);
-}
-#sidebar-card-list .sidebar-card-item.active:hover {
-    background-color: var(--pico-primary-hover);
-    border-color: var(--pico-primary-hover);
-}
-
-.sidebar-footer {
-    flex-shrink: 0;
-    padding: 0;
-    border-top: 1px solid var(--pico-border-color);
-}
-
-.sidebar-actions {
-    padding: var(--pico-spacing);
-}
-
-#add-card-btn-sidebar {
-    width: 100%;
-    margin: 0;
+#theme-switcher, #mobile-theme-switcher {
+    background: var(--bg-color-1); 
+    border: 1px solid var(--bg-color-3);
+    cursor: pointer;
+    padding: 0; 
+    width: 40px; height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    padding: 12px 15px;
-    font-weight: 600;
-    font-size: 1em;
-    border: 1px solid var(--pico-primary);
-    background-color: transparent;
-    color: var(--pico-primary);
+    border-radius: 50%;
     transition: all 0.2s ease;
+    color: var(--text-color-secondary);
 }
-#add-card-btn-sidebar:hover {
-    background-color: var(--pico-primary);
-    color: var(--pico-primary-inverse);
-    box-shadow: 0 4px 10px rgba(var(--pico-primary-rgb), 0.2);
-    transform: translateY(-2px);
+#theme-switcher:hover, #mobile-theme-switcher:hover {
+    transform: rotate(15deg);
+    color: var(--primary-500);
 }
-#add-card-btn-sidebar svg {
-    stroke: var(--pico-primary);
-    transition: stroke 0.2s ease;
-}
-#add-card-btn-sidebar:hover svg {
-    stroke: var(--pico-primary-inverse);
+#theme-switcher svg, #mobile-theme-switcher svg { 
+    width: 20px; 
+    height: 20px; 
 }
 
-/* Styles for utility buttons in sidebar */
-.sidebar-utility {
+
+#main-content-panel {
+    background-color: var(--bg-color-1);
+    overflow-y: auto;
+    padding-bottom: 120px; /* Space for mobile nav */
+}
+
+.main-content {
+    padding-top: var(--spacing-lg);
+    padding-bottom: var(--spacing-lg);
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding: var(--pico-spacing);
-    padding-top: 0;
-    border-top: 1px solid var(--pico-border-color);
+    gap: var(--spacing-xl);
 }
 
-.sidebar-utility button {
-    width: 100%;
-    margin: 0;
-    padding: 10px 15px;
-    font-weight: 500;
-    font-size: 0.95em;
-    border: 1px solid var(--secondary-text);
-    background-color: transparent;
-    color: var(--secondary-text);
-}
-.sidebar-utility button:hover {
-    background-color: var(--pico-background-color);
-    border-color: var(--pico-primary);
-    color: var(--pico-primary);
+.section-header {
+    padding: 0 var(--spacing-md);
+    margin-bottom: var(--spacing-md);
 }
 
-/* Main Content Area */
-.main-content {
-    flex-grow: 1;
-    width: 100%;
+
+/* Mobile Bottom Navigation */
+#mobile-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    background-color: var(--bg-color-2);
+    border-top: 1px solid var(--bg-color-3);
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: flex-start;
+    padding: var(--spacing-sm) var(--spacing-md);
+    padding-bottom: max(var(--spacing-sm), env(safe-area-inset-bottom));
+    box-shadow: 0 -2px 10px -2px var(--shadow-color);
+    z-index: 1000;
 }
+.mobile-nav-btn {
+    grid-row: 1;
+    background: none; border: none; padding: 0;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 4px;
+    font-size: 0.75rem; color: var(--text-color-secondary);
+    font-weight: 500; transition: color 0.2s ease;
+    width: 64px; /* give a fixed width for alignment */
+    place-self: center;
+}
+.mobile-nav-btn:nth-child(1) { grid-column: 1; justify-self: start; }
+.mobile-nav-btn:nth-child(3) { grid-column: 3; justify-self: end; }
+
+.mobile-nav-btn img {
+    width: 24px; height: 24px;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+}
+[data-theme="dark"] .mobile-nav-btn img { filter: invert(1); }
+
+.mobile-nav-btn.active { color: var(--primary-500); }
+.mobile-nav-btn.active img { opacity: 1; }
+
+.mobile-nav-fab {
+    grid-column: 2;
+    grid-row: 1;
+    width: 56px; height: 56px;
+    background: var(--primary-gradient);
+    border-radius: 50%;
+    margin-top: -28px;
+    place-self: center;
+    box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+    transition: transform 0.2s ease;
+}
+.mobile-nav-fab:active { transform: scale(0.95); }
+.mobile-nav-fab img {
+    width: 28px; height: 28px;
+    filter: brightness(0) invert(1);
+}
+
+/* --- Responsive Layouts --- */
+
+/* Mobile First (Default) */
+#app-layout { grid-template-columns: 100%; }
+#card-list-panel, #main-content-panel { grid-column: 1; grid-row: 1; }
+
+#app-layout[data-view="home"] #card-list-panel { display: none; }
+#app-layout[data-view="home"] #main-content-panel { display: block; }
+
+#app-layout[data-view="cards"] #card-list-panel { display: flex; }
+#app-layout[data-view="cards"] #main-content-panel { display: none; }
+
+.mobile-header { display: flex; }
+.panel-header, .panel-footer { display: none; } /* Hide desktop panel elements */
+
 
 /* Desktop Styles */
-@media (min-width: 768px) {
-    #menu-toggle-container {
-        display: none;
+@media (min-width: 992px) {
+    #app-layout {
+        grid-template-columns: 320px 1fr;
     }
 
-    body {
-        flex-direction: row;
+    #card-list-panel {
+        display: flex !important; /* Always show on desktop */
+        grid-column: 1;
     }
-
-    #page-content-wrapper {
-        transform: translateX(0);
-        min-height: 100vh; /* Ensure it still covers full height */
+    #main-content-panel {
+        display: block !important; /* Always show on desktop */
+        grid-column: 2;
+        padding-bottom: 0;
     }
-
-    #sidebar {
-        position: static;
-        transform: translateX(0);
-        height: 100vh; /* Fixed height for desktop sidebar */
-        box-shadow: none;
-        width: 280px;
-        flex-shrink: 0;
-        padding: 0; /* Remove padding for desktop sidebar */
-        border-right: 1px solid var(--pico-border-color);
+    .main-content.container {
+        max-width: 900px;
+        padding: 0 var(--spacing-xl);
     }
-    body.sidebar-open #sidebar {
-        box-shadow: none; /* No extra shadow when always open */
-    }
-
-    .app-container {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        min-height: calc(100vh - 60px); /* Account for header */
-    }
-
-    .main-content {
-    }
+    
+    .panel-header, .panel-footer { display: grid; }
+    .mobile-header, #mobile-nav { display: none; }
 }

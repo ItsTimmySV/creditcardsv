@@ -1,484 +1,231 @@
-/* Component Styles: Summary, Cards, Transactions, Installments */
+/* Component Styles: Summary, Cards, Transactions, Installments, Empty States */
 
-/* Summary */
-#summary {
-    margin-top: var(--pico-spacing); /* NEW: Add space between header and summary */
+/* Summary Section */
+.summary-section {
+    background-color: var(--bg-color-2);
+    border-radius: var(--border-radius-xl);
+    border: 1px solid var(--bg-color-3);
+    padding: var(--spacing-lg);
+    box-shadow: 0 1px 3px 0 var(--shadow-color), 0 1px 2px -1px var(--shadow-color);
 }
-#summary .grid {
-    gap: var(--pico-spacing);
-    margin-bottom: var(--pico-spacing);
-    /* Ensure responsiveness on smaller screens with auto-fit and minmax */
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+.summary-header {
+    margin-bottom: var(--spacing-lg);
 }
-
-/* Explicitly set to 3 columns on larger desktop screens for a consistent look */
-@media (min-width: 992px) { /* Pico's 'lg' breakpoint is a good choice for desktop */
-    #summary .grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--spacing-lg);
 }
-
-#summary article {
-    text-align: center;
-    padding: 1.5rem 1rem; /* More vertical padding */
-    margin-bottom: 0;
-    border-radius: var(--pico-card-border-radius);
-    box-shadow: var(--pico-card-box-shadow);
-    background-color: var(--pico-card-background-color);
-    border: 1px solid var(--pico-card-border-color);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+.summary-item h6 {
+    font-size: 0.875rem; /* 14px */
+    color: var(--text-color-secondary);
+    margin-bottom: var(--spacing-xs);
 }
-#summary article:hover {
-    transform: translateY(-3px); /* Subtle hover lift */
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-}
-#summary article h4 {
-    font-size: 2.2em; /* Larger, more impactful numbers */
-    margin-top: 0.5rem;
-    margin-bottom: 0;
-    font-weight: 700; /* Bolder */
-    color: var(--pico-primary); /* Primary color for numbers */
-}
-#summary article h6 {
-    font-size: 1em; /* Slightly larger heading */
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--secondary-text);
+.summary-item h4 {
+    font-size: 1.5rem; /* 24px */
+    font-weight: 700;
 }
 
-/* Card Styles */
-.card {
-    background-color: var(--pico-card-background-color); 
-    border: 1px solid var(--pico-card-border-color); 
-    border-radius: var(--pico-card-border-radius);
-    margin-bottom: var(--pico-spacing);
-    box-shadow: var(--pico-card-box-shadow);
-    overflow: hidden; 
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-}
-
-.card-header {
+/* Card List Item */
+.card-list-item-button {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: var(--pico-spacing);
-    border-bottom: 1px solid var(--pico-border-color); 
-    background-color: var(--pico-background-color); /* Match header's slightly darker background */
-}
-
-.card-title h5 {
-    margin: 0;
-    font-size: 1.4em; /* Larger card alias */
-    font-weight: 700;
-    color: var(--pico-color);
-}
-.card-title p {
-    margin: 0;
-    font-size: 0.9em;
-    color: var(--secondary-text);
-}
-
-.card-actions {
-    display: flex;
-    gap: 10px; /* Slightly more space between buttons */
-}
-.card-actions button {
-    border-radius: 50%; 
-    width: 40px; /* Larger circular buttons */
-    height: 40px;
-    padding: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0; 
-    border: 1px solid var(--pico-border-color);
-    background-color: var(--pico-card-background-color);
-    color: var(--pico-color);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--bg-color-3);
+    background-color: var(--bg-color-2);
+    text-align: left;
     transition: all 0.2s ease;
 }
-.card-actions button:hover {
-    background-color: var(--pico-background-color);
-    transform: scale(1.05);
+.card-list-item-button:hover {
+    border-color: var(--primary-500);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.07);
 }
-.card-actions button.secondary:hover {
-    border-color: var(--pico-primary);
-    color: var(--pico-primary);
+.card-list-item-button.active {
+    background: var(--primary-gradient);
+    color: white;
+    border-color: transparent;
 }
-.card-actions button.contrast:hover {
-    border-color: var(--danger-color);
-    color: var(--danger-color);
-}
-
-.card-actions button svg {
-    width: 1.3rem; /* Larger icons */
-    height: 1.3rem;
-    stroke: currentColor; /* Ensure SVG inherits color */
-}
-
-.card-body {
-    padding: var(--pico-spacing);
-}
-
-.card-summary {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1.8rem; /* More space */
-    margin-bottom: 1.8rem;
-    padding-bottom: 1.8rem;
-    border-bottom: 1px dashed var(--pico-border-color);
-}
-
-.summary-item {
+.card-list-item-info {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    text-align: center;
+}
+.card-list-item-alias {
+    font-weight: 600;
+}
+.card-list-item-bank {
+    font-size: 0.875rem;
+    color: var(--text-color-secondary);
+}
+.card-list-item-button.active .card-list-item-bank {
+    color: rgba(255,255,255,0.7);
+}
+.card-list-item-balance {
+    font-weight: 600;
 }
 
-.summary-item span {
-    font-size: 0.9em;
-    color: var(--secondary-text);
-    margin-bottom: 0.4rem;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-}
-
-.summary-item strong {
-    font-size: 1.8em; /* Larger summary numbers */
-    font-weight: 700;
-    color: var(--pico-color);
-}
-
-progress {
-    width: 100%;
-    height: 12px; /* Thicker progress bar */
-    border-radius: 6px;
-    -webkit-appearance: none;
-    appearance: none;
-    margin-bottom: 1.8rem;
+/* Main Card Detail View */
+.card {
+    background-color: var(--bg-color-2); 
+    border: 1px solid var(--bg-color-3); 
+    border-radius: var(--border-radius-xl);
+    box-shadow: 0 1px 3px 0 var(--shadow-color), 0 1px 2px -1px var(--shadow-color);
     overflow: hidden; 
-    background-color: var(--pico-border-color); /* Base color of the bar */
 }
-progress::-webkit-progress-bar {
-    background-color: transparent; /* Already set on parent */
-    border-radius: 6px;
+.card-body {
+    padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
 }
-progress::-webkit-progress-value {
-    background-color: var(--pico-primary);
-    border-radius: 6px;
-    transition: width 0.3s ease-out;
+.card-main-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
 }
-progress[value^="8"]::-webkit-progress-value {
-    background-color: var(--warning-color);
+.card-balance small {
+    font-size: 0.875rem;
+    color: var(--text-color-secondary);
 }
-progress[value^="9"]::-webkit-progress-value,
-progress[value="100"]::-webkit-progress-value {
-    background-color: var(--danger-color);
+.card-balance strong {
+    font-size: 2.25rem; /* 36px */
+    font-weight: 700;
+    line-height: 1.1;
+    display: block;
 }
+.card-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+.credit-usage-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    color: var(--text-color-secondary);
+    margin-bottom: var(--spacing-sm);
+}
+.credit-usage-labels strong {
+    color: var(--text-color-primary);
+    font-weight: 500;
+}
+.credit-usage-labels .dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    margin-right: 4px;
+}
+.dot.available { background-color: var(--color-success); }
+progress {
+    width: 100%; height: 8px; border-radius: 4px;
+    -webkit-appearance: none; appearance: none;
+    overflow: hidden; 
+    background-color: var(--bg-color-3); border: none;
+}
+progress::-webkit-progress-bar { background-color: transparent; }
+progress::-webkit-progress-value { background: var(--primary-gradient); }
 
 .card-details-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px dashed var(--pico-border-color);
-}
-.card-details-grid div {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; 
-}
-.card-details-grid p {
-    margin: 0;
-    font-weight: 600; /* Slightly less bold than numbers */
-    font-size: 1.15em;
-    color: var(--pico-color);
+    gap: var(--spacing-lg) var(--spacing-md);
 }
 .card-details-grid small {
-     color: var(--secondary-text);
-     font-size: 0.9em;
-     margin-bottom: 0.3rem;
-     text-transform: uppercase;
-     letter-spacing: 0.02em;
+     color: var(--text-color-secondary);
+     font-size: 0.875rem;
 }
-
-/* NEW: Buttons at the bottom of the card to open modals */
-.card-actions-bottom {
-    display: flex;
-    gap: 15px; /* More space */
-    justify-content: center; /* Center the buttons */
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px dashed var(--pico-border-color);
-}
-.card-actions-bottom button {
-    flex: 1; /* Allow buttons to take equal width */
-    max-width: 220px; /* Slightly wider buttons */
-    font-size: 0.95em;
-    padding: 10px 15px;
-    border-radius: var(--pico-border-radius);
+.card-details-grid p {
     font-weight: 600;
-    background-color: transparent; /* Outline style */
-    border: 1px solid var(--pico-primary);
-    color: var(--pico-primary);
+    font-size: 1rem;
 }
-.card-actions-bottom button:hover {
-    background-color: var(--pico-primary);
-    color: var(--pico-primary-inverse);
-    box-shadow: 0 4px 10px rgba(var(--pico-primary-rgb), 0.2);
-    transform: translateY(-2px);
-}
-
-/* Transaction and Installment tables/lists within modals */
-.modal-content-scroll {
-    max-height: 70vh; /* Allow content to scroll if too tall */
-    overflow-y: auto;
-    padding: 1rem 1.5rem; /* Consistent with modal padding */
-}
-
-.modal-content-scroll table {
-    width: 100%;
-    margin-bottom: 0; 
-    border-collapse: collapse; /* Collapse borders for a cleaner look */
-    table-layout: fixed; /* Force table to obey widths and prevent content from expanding it */
-}
-.modal-content-scroll table th,
-.modal-content-scroll table td {
-    padding: 12px 10px; /* Adjust padding */
-    text-align: left;
-    border-bottom: 1px solid var(--pico-border-color);
-    white-space: normal; /* Allow content to wrap */
-    word-break: break-word; /* Break long words to prevent overflow */
-}
-.modal-content-scroll table th {
-    background-color: var(--pico-background-color); /* Match modal header */
-    font-size: 0.95em;
-    color: var(--secondary-text);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    position: sticky; /* Make headers stick */
-    top: 0;
-    z-index: 1;
-}
-.modal-content-scroll table tbody tr:last-child td {
-    border-bottom: none;
-}
-
-/* Explicitly set column widths for better control */
-.modal-content-scroll table th:nth-child(1), /* Fecha */
-.modal-content-scroll table td:nth-child(1) {
-    width: 25%;
-}
-
-.modal-content-scroll table th:nth-child(3), /* Monto */
-.modal-content-scroll table td:nth-child(3) {
-    width: 30%;
-    text-align: right; /* Right-align amounts for readability */
-    white-space: nowrap; /* Prevent amounts from wrapping */
-    padding-right: 15px; /* Add some padding to the right */
-}
-
-.modal-content-scroll table th:nth-child(4), /* Acciones */
-.modal-content-scroll table td:nth-child(4) {
-    width: 60px; /* Fixed width for action button */
-    text-align: center;
-}
-
-.modal-content-scroll table th:nth-child(3) { /* Monto Header */
-    text-align: right;
-    padding-right: 15px;
-}
-.modal-content-scroll table th:nth-child(4) { /* Acciones Header */
-    text-align: center;
-}
-
-.modal-content-scroll table th:last-child,
-.modal-content-scroll table td:last-child {
-    width: 1%; 
-    white-space: nowrap; 
-    text-align: center; 
-}
-.modal-content-scroll table td:last-child {
-    text-align: center; 
-    width: 1%; /* Keep action column minimal */
-    white-space: nowrap; /* Prevent action buttons from wrapping */
-}
-.modal-content-scroll table th:last-child {
-    text-align: center;
-    width: 1%;
-    white-space: nowrap;
-}
-
-.transaction-delete-btn {
-    padding: 8px; /* Adjust button size */
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--pico-border-radius); 
-    border: 1px solid var(--danger-color);
-    background-color: transparent;
-    color: var(--danger-color);
-}
-.transaction-delete-btn:hover {
-    background-color: var(--danger-color);
-    color: var(--pico-primary-inverse);
-    box-shadow: 0 2px 5px rgba(var(--danger-color-rgb), 0.2);
-}
-.transaction-delete-btn svg {
-    width: 1rem;
-    height: 1rem;
-    stroke: currentColor;
-}
-
-/* Installment Specific Styles */
-.installment-tag {
-    background: var(--info-color);
-    color: var(--pico-primary-inverse);
-    padding: 3px 8px;
-    border-radius: 15px;
-    font-size: 0.75em;
-    margin-left: 8px;
-    font-weight: 600;
-}
-[data-theme="dark"] .installment-tag {
-    background: var(--pico-color-indigo-600);
-    color: var(--pico-color-indigo-100);
-}
-.payment-text {
-    color: var(--success-color);
-    font-weight: bold;
-}
-[data-theme="dark"] .payment-text {
-    color: var(--pico-color-green-400);
-}
-
-/* Installment Item Styles (used in modal now) */
-#modal-installments-list {
+.card-footer {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center; /* Center items in the list */
-    gap: var(--pico-spacing); /* Spacing between items */
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    background-color: var(--bg-color-1);
+    border-top: 1px solid var(--bg-color-3);
+}
+.card-footer button.outline {
+    flex: 1;
+    padding: 0.6rem 1rem;
+    background-color: var(--bg-color-2);
+    border: 1px solid var(--bg-color-3);
+    color: var(--text-color-primary);
+    font-weight: 500;
+    border-radius: var(--border-radius-md);
+    transition: all 0.2s ease;
+}
+.card-footer button.outline:hover {
+    border-color: var(--primary-500);
+    color: var(--primary-500);
 }
 
+/* Transaction Table */
+.transaction-table {
+    width: 100%; border-collapse: collapse;
+}
+.transaction-table th, .transaction-table td {
+    padding: var(--spacing-sm) var(--spacing-md); text-align: left;
+}
+.transaction-table th {
+    font-size: 0.75rem; color: var(--text-color-secondary);
+    text-transform: uppercase; letter-spacing: 0.05em; font-weight: 500;
+    border-bottom: 1px solid var(--bg-color-3);
+}
+.transaction-table tbody tr { border-bottom: 1px solid var(--bg-color-3); }
+.transaction-table tbody tr:last-child { border-bottom: none; }
+.expense-text { color: var(--text-color-primary); font-weight: 500; }
+.payment-text { color: var(--color-success); font-weight: 500; }
+
+/* Installment Item Styles */
+#modal-installments-list { display: grid; gap: var(--spacing-md); }
 .installment-item {
-    background-color: var(--pico-card-background-color);
-    border: 1px solid var(--pico-card-border-color);
-    border-radius: var(--pico-border-radius);
-    padding: 1.2rem; /* Increased padding */
-    position: relative; 
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    max-width: 100%; /* Ensure it doesn't overflow parent */
-    flex-basis: 300px; /* Allow items to grow/shrink but prefer a minimum size for wrapping */
-    flex-grow: 1; /* Allow items to fill available space */
+    background-color: var(--bg-color-1);
+    border: 1px solid var(--bg-color-3);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-md);
+    display: flex; flex-direction: column; gap: var(--spacing-md);
 }
-.installment-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
+.installment-item-header { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--spacing-sm); }
+.installment-item h6 { font-size: 1rem; font-weight: 600; }
+.installment-progress-info { display: flex; justify-content: space-between; font-size: 0.875rem; color: var(--text-color-secondary); margin-bottom: var(--spacing-xs); }
+.installment-progress-info span:first-child { font-weight: 500; color: var(--text-color-primary); }
+.installment-details { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-sm); }
+.installment-details small { font-size: 0.875rem; color: var(--text-color-secondary); }
+.installment-details p { font-size: 0.95rem; font-weight: 500; }
+.installment-actions { display: flex; justify-content: flex-end; }
+.gradient-button.small { padding: 0.5rem 1rem; font-size: 0.875rem; }
 
-.installment-item h6 {
-    margin-top: 0;
-    margin-bottom: 1rem; /* More space */
-    font-size: 1.2em;
-    color: var(--pico-primary); 
-    font-weight: 700;
-}
-.installment-item .grid {
-    display: grid;
-    /* Dynamically adjust columns based on available space and minimum content width */
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 1rem; /* Consistent gap */
-    margin-bottom: 1rem;
-}
-
-.installment-item .grid small {
-    font-size: 0.85em;
-    color: var(--secondary-text);
-    margin-bottom: 0.2rem;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-}
-.installment-item .grid p {
-    margin: 0;
-    font-weight: 600;
-    font-size: 1.05em;
-    color: var(--pico-color);
-}
-.installment-item progress {
-    margin-top: 0.8rem;
-    margin-bottom: 1.2rem;
-    height: 10px; /* Slightly thicker progress bar */
-}
-.installment-item .installment-actions {
+/* Empty State */
+.empty-state {
+    padding: var(--spacing-xl) var(--spacing-lg);
+    text-align: center;
+    background-color: var(--bg-color-2);
+    border-radius: var(--border-radius-xl);
+    border: 1px solid var(--bg-color-3);
     display: flex;
-    gap: 10px; /* Consistent gap */
-    justify-content: flex-end; /* Align to the right */
-    margin-top: 1rem; 
-    flex-wrap: wrap; /* Allow buttons to wrap to the next line if space is limited */
-}
-
-@media (max-width: 450px) {
-    .installment-item .installment-actions {
-        flex-direction: column; /* Stack buttons vertically on very small screens */
-        align-items: stretch; /* Make them full width */
-    }
-    .installment-item .installment-actions button {
-        width: 100%; /* Ensure buttons take full width when stacked */
-        margin-bottom: 0.5rem; /* Add some vertical spacing */
-    }
-    .installment-item .installment-actions button:last-child {
-        margin-bottom: 0; /* No margin after the last stacked button */
-    }
-}
-
-.installment-item .pay-installment-btn {
-    padding: 10px 15px;
-    font-size: 0.95em;
-    font-weight: 600;
-    border: 1px solid var(--pico-primary);
-    background-color: var(--pico-primary);
-    color: var(--pico-primary-inverse);
-}
-.installment-item .pay-installment-btn:hover:not([disabled]) {
-    background-color: var(--pico-primary-hover);
-    border-color: var(--pico-primary-hover);
-    box-shadow: 0 4px 10px rgba(var(--pico-primary-rgb), 0.2);
-    transform: translateY(-2px);
-}
-.installment-item .pay-installment-btn[disabled] {
-    opacity: 0.6;
-    cursor: not-allowed;
-    background-color: var(--pico-border-color);
-    color: var(--secondary-text);
-    border-color: var(--pico-border-color);
-    box-shadow: none;
-    transform: none;
-}
-
-.installment-item .installment-delete-btn {
-    padding: 8px 12px; 
-    display: inline-flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    border-radius: var(--pico-border-radius);
-    border: 1px solid var(--danger-color);
+    gap: var(--spacing-md);
+}
+.empty-state-icon {
+    width: 48px; height: 48px;
+    background-color: var(--primary-500);
+    padding: 10px;
+    border-radius: 50%;
+    filter: brightness(0) invert(1);
+}
+[data-theme="dark"] .empty-state-icon {
+    filter: brightness(0) invert(1); /* Ensure it's white on dark mode too */
+}
+[data-theme="dark"] .empty-state {
     background-color: transparent;
-    color: var(--danger-color);
+    border-style: dashed;
 }
-.installment-item .installment-delete-btn:hover {
-    background-color: var(--danger-color);
-    color: var(--pico-primary-inverse);
-    box-shadow: 0 2px 5px rgba(var(--danger-color-rgb), 0.2);
-    transform: translateY(-2px);
-}
-.installment-item .installment-delete-btn svg {
-    width: 1rem;
-    height: 1rem;
-    stroke: currentColor;
+.empty-state p {
+    max-width: 35ch;
+    margin: 0 auto;
+    color: var(--text-color-secondary);
 }

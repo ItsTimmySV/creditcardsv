@@ -1,134 +1,225 @@
 /* Base Styles & Global Variables */
 :root {
-    /* Primary Color - A deep, professional blue */
-    --pico-primary: #3498db; 
-    --pico-primary-hover: #2980b9; 
-    --pico-primary-inverse: #ffffff;
-
-    /* Background & Text Colors - Clean and modern */
-    --pico-background-color: #f0f2f5; /* Light gray for main background */
-    --pico-color: #333d47; /* Dark charcoal for primary text */
-    --pico-border-color: #e0e0e0; /* Soft border color */
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     
-    /* Card Specifics */
-    --pico-card-background-color: #ffffff; /* Crisp white cards */
-    --pico-card-border-color: #d1d9e6; /* Subtle card border */
-    --pico-card-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Soft, pronounced shadow */
+    /* Brand Colors */
+    --primary-500: #4f46e5;
+    --primary-600: #4338ca;
+    --primary-700: #3730a3;
+    --primary-gradient: linear-gradient(to right, var(--primary-500), var(--primary-600));
 
-    /* Secondary & Accent Colors */
-    --secondary-text: #7f8c8d; /* Muted gray for secondary info */
-    --sidebar-bg: #ffffff; /* White sidebar background */
-    --sidebar-border-right: 1px solid #e0e0e0; /* Soft border for sidebar */
-    --sidebar-text: var(--pico-color);
+    /* Light Theme */
+    --bg-color-1: #f3f4f6; /* main bg (gray-100) */
+    --bg-color-2: #ffffff; /* card bg */
+    --bg-color-3: #e5e7eb; /* borders, dividers (gray-200) */
+    --text-color-primary: #111827; /* gray-900 */
+    --text-color-secondary: #6b7280; /* gray-500 */
+    --text-color-tertiary: #9ca3af; /* gray-400 */
+    --shadow-color: rgba(0, 0, 0, 0.05);
+    
+    /* Status Colors */
+    --color-success: #16a34a; /* green-600 */
+    --color-success-bg: #f0fdf4; /* green-50 */
+    --color-danger: #dc2626; /* red-600 */
+    --color-danger-bg: #fef2f2; /* red-50 */
+    --color-danger-border: #fecaca; /* red-200 */
 
-    /* Specific Status Colors */
-    --success-color: #2ecc71; /* Green for success */
-    --danger-color: #e74c3c; /* Red for danger */
-    --warning-color: #f39c12; /* Orange for warning */
-    --info-color: #3498db; /* Blue for info */
-
-    /* Typography */
-    --pico-font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    --pico-font-size: 16px; /* Base font size */
-    --pico-line-height: 1.6;
-
-    /* Spacing & Radius */
-    --pico-spacing: 20px; /* Base spacing unit */
-    --pico-border-radius: 8px; /* Standard rounded corners */
-    --pico-card-border-radius: 12px; /* Slightly more rounded cards */
+    /* Sizing & Radius */
+    --line-height: 1.5;
+    --spacing-unit: 8px;
+    --spacing-xs: calc(var(--spacing-unit) * 0.5);   /* 4px */
+    --spacing-sm: calc(var(--spacing-unit) * 1);     /* 8px */
+    --spacing-md: calc(var(--spacing-unit) * 2);     /* 16px */
+    --spacing-lg: calc(var(--spacing-unit) * 3);     /* 24px */
+    --spacing-xl: calc(var(--spacing-unit) * 4);     /* 32px */
+    --border-radius-sm: 6px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+    --border-radius-xl: 16px;
 }
 
 [data-theme="dark"] {
-    /* Primary Color - Lighter blue for dark mode */
-    --pico-primary: #5a9edc;
-    --pico-primary-hover: #7eb4e8;
-    --pico-primary-inverse: #000;
+    /* Dark Theme */
+    --bg-color-1: #111827; /* gray-900 */
+    --bg-color-2: #1f2937; /* gray-800 */
+    --bg-color-3: #374151; /* gray-700 */
+    --text-color-primary: #f9fafb; /* gray-50 */
+    --text-color-secondary: #9ca3af; /* gray-400 */
+    --text-color-tertiary: #6b7280; /* gray-500 */
+    --shadow-color: rgba(0, 0, 0, 0.2);
 
-    /* Background & Text Colors - Darker, more "black" theme */
-    --pico-background-color: #121212; /* Very dark gray, near black */
-    --pico-color: #e4e6eb; /* Light gray for text */
-    --pico-border-color: #393e46; /* Darker borders */
-    
-    /* Card Specifics - Elevated surface color */
-    --pico-card-background-color: #1e1e1e; /* Slightly lighter than background */
-    --pico-card-border-color: #393e46; /* Matches border color */
-    --pico-card-box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    /* Status Colors */
+    --color-success: #4ade80; /* green-400 */
+    --color-success-bg: #1f2937;
+    --color-danger: #f87171; /* red-400 */
+    --color-danger-bg: #1f2937;
+    --color-danger-border: #4b5563; /* gray-600 */
+}
 
-    /* Secondary & Accent Colors */
-    --secondary-text: #adb5bd; /* Lighter muted gray */
-    --sidebar-bg: #1e1e1e; /* Matches card background */
-    --sidebar-border-right: 1px solid #393e46;
-    --sidebar-text: var(--pico-color);
-
-    /* Specific Status Colors for Dark Mode */
-    --success-color: #28a745;
-    --danger-color: #dc3545;
-    --warning-color: #ffc107;
-    --info-color: #17a2b8;
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-    background-color: var(--pico-background-color);
-    margin: 0;
-    overflow-x: hidden;
-    font-family: var(--pico-font-family);
-    line-height: var(--pico-line-height);
-    color: var(--pico-color);
-    display: flex;
-    min-height: 100vh;
-    font-size: var(--pico-font-size);
+    background-color: var(--bg-color-1);
+    font-family: var(--font-family);
+    line-height: var(--line-height);
+    color: var(--text-color-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Adjust font size for very small phones for better readability */
-@media (max-width: 480px) {
-    body {
-        font-size: 0.9rem;
-    }
-}
-
-/* Base Pico overrides and custom global styles */
-a {
-    color: var(--pico-primary);
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-a:hover {
-    color: var(--pico-primary-hover);
+/* Base element styling */
+a, button {
+    cursor: pointer;
+    font-family: inherit;
+    color: inherit;
+    -webkit-tap-highlight-color: transparent;
 }
 
 button {
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border-radius: var(--pico-border-radius);
+    border: none;
+    background: none;
 }
 
-input[type="text"],
-input[type="number"],
-input[type="date"],
-select {
-    border-radius: var(--pico-border-radius);
-    padding: 10px 15px;
-    border: 1px solid var(--pico-border-color);
-    background-color: var(--pico-card-background-color);
-    color: var(--pico-color);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+button.gradient-button {
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--border-radius-md);
+    transition: all 0.2s ease-in-out;
+    background: var(--primary-gradient);
+    color: white;
+    box-shadow: 0 1px 3px 0 var(--shadow-color), 0 1px 2px -1px var(--shadow-color);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
 }
-input[type="text"]:focus,
-input[type="number"]:focus,
-input[type="date"]:focus,
-select:focus {
-    border-color: var(--pico-primary);
-    box-shadow: 0 0 0 3px rgba(var(--pico-primary-rgb), 0.2);
+button.gradient-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+}
+button.gradient-button:active {
+    transform: translateY(0);
+}
+button.gradient-button[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: var(--bg-color-3);
+    color: var(--text-color-secondary);
+    box-shadow: none;
+    transform: none;
+}
+
+button.secondary {
+    background-color: var(--bg-color-2);
+    color: var(--text-color-primary);
+    border: 1px solid var(--bg-color-3);
+    border-radius: var(--border-radius-md);
+    padding: 0.6rem 1rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+button.secondary:hover {
+    background-color: var(--bg-color-1);
+    border-color: var(--text-color-tertiary);
+}
+
+.icon-button {
+    border-radius: 50%; width: 40px; height: 40px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 1px solid var(--bg-color-3);
+    background: var(--bg-color-2); 
+    color: var(--text-color-secondary);
+    transition: all 0.2s ease;
+}
+.icon-button svg { width: 20px; height: 20px; }
+.icon-button:hover {
+    color: var(--primary-500);
+    border-color: var(--primary-500);
+}
+.icon-button.danger:hover {
+    color: var(--color-danger);
+    border-color: var(--color-danger);
+}
+.icon-button.small { width: 32px; height: 32px; }
+.icon-button.small svg { width: 16px; height: 16px; }
+
+input, select {
+    border-radius: var(--border-radius-md);
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--bg-color-3);
+    background-color: var(--bg-color-2);
+    color: var(--text-color-primary);
+    font-family: inherit;
+    font-size: 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+    -webkit-appearance: none; appearance: none;
+}
+input:focus, select:focus {
+    border-color: var(--primary-500);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
     outline: none;
 }
+input[type="date"] {
+    padding-top: 1rem;
+    padding-bottom: 0.5rem;
+}
+.floating-label { position: relative; }
+.floating-label label {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    color: var(--text-color-secondary);
+    background-color: var(--bg-color-2);
+    padding: 0 0.25rem;
+    transition: all 0.2s ease;
+    pointer-events: none;
+}
+.floating-label input:focus + label,
+.floating-label input:not(:placeholder-shown) + label,
+.floating-label select:focus + label,
+.floating-label select:valid + label { /* using :valid for select placeholder */
+    top: 0;
+    font-size: 0.75rem;
+    color: var(--primary-500);
+    font-weight: 500;
+}
+select:required:invalid { color: var(--text-color-secondary); }
+option[value=""][disabled] { display: none; }
+option { color: var(--text-color-primary); }
 
-/* Utilities */
-.secondary-text {
-    color: var(--secondary-text);
-    margin-bottom: 0.25rem;
-    font-size: 0.9em;
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--text-color-primary);
+}
+h1 { font-size: 1.875rem; } /* 30px */
+h2 { font-size: 1.5rem; }    /* 24px */
+h3 { font-size: 1.25rem; }   /* 20px */
+h4 { font-size: 1.125rem; }  /* 18px */
+h6 { font-weight: 500; }
+
+.secondary-text { color: var(--text-color-secondary); }
+
+.grid {
+    display: grid;
+    gap: var(--spacing-md);
 }
 
-h4, h5, h6 {
-    margin-top: 0;
+.container {
+    width: 100%;
+    padding: 0 var(--spacing-md);
+    margin: 0 auto;
 }
+
+.align-right { text-align: right; }
+.align-center { text-align: center; }
