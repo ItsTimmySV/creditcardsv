@@ -58,12 +58,29 @@ export const calculateCardDetails = (card) => {
             if (tx.type === 'expense') {
                 paymentForPeriodAmount += tx.amount;
             } else if (tx.type === 'installment_purchase') {
-                // For 'Pago para no generar intereses', add the monthly payment if the purchase occurred in this cycle.
-                // This makes its behavior consistent with 'Próximo Pago (Estimado)' for new installment purchases.
-                paymentForPeriodAmount += tx.monthlyPayment; 
+                // For 'Pago para no generar intereses', we look at actual payments made in the period
+                // This will be handled by the related 'payment' transactions.
             } else if (tx.type === 'payment') {
                 paymentForPeriodAmount -= tx.amount;
             }
+        }
+    });
+     // Add installment monthly payments due in the *previous* cycle
+    card.transactions.filter(tx => tx.type === 'installment_purchase' && tx.paidMonths < tx.months).forEach(inst => {
+        const purchaseDate = new Date(inst.date + 'T00:00:00');
+        // Only add the monthly payment if the purchase was active during the previous cycle
+        if (currentStatementCutoff > purchaseDate) {
+             // And crucially, only if a payment for it was *not* already made and accounted for in the loop above.
+             // We check if a 'payment' transaction related to this installment exists within the statement period.
+             const wasPaidInPeriod = card.transactions.some(p => 
+                p.relatedInstallmentId === inst.id &&
+                new Date(p.date + 'T00:00:00') > prevStatementCutoff &&
+                new Date(p.date + 'T00:00:00') <= currentStatementCutoff
+             );
+             // If it wasn't paid via the installment system, it's considered part of the "new" balance for that statement.
+             if (!wasPaidInPeriod) {
+                paymentForPeriodAmount += inst.monthlyPayment;
+             }
         }
     });
 
@@ -71,18 +88,35 @@ export const calculateCardDetails = (card) => {
     // Sum all debits and subtract credits that occurred within the period (currentStatementCutoff, nextCutoff].
     // This value represents the total *new charges* that will appear on the next statement.
     let nextPaymentAmount = 0;
+    // 1. Sum regular expenses and payments within the current cycle
     card.transactions.forEach(tx => {
         const txDate = new Date(tx.date + 'T00:00:00');
         if (txDate > currentStatementCutoff && txDate <= nextCutoff) {
              if (tx.type === 'expense') {
                 nextPaymentAmount += tx.amount;
-            } else if (tx.type === 'installment_purchase') {
-                // For 'Próximo Pago (Estimado)', only the monthly payment contributes if the installment is active.
-                if (tx.paidMonths < tx.months) {
-                    nextPaymentAmount += tx.monthlyPayment; 
-                }
-            } else if (tx.type === 'payment') {
+            } else if (tx.type === 'payment' && !tx.relatedInstallmentId) { 
+                // Subtract general payments, but not installment-specific ones
                 nextPaymentAmount -= tx.amount;
+            }
+        }
+    });
+
+    // 2. Add monthly payments for active installments due in this cycle
+    const activeInstallments = card.transactions.filter(tx => tx.type === 'installment_purchase' && tx.paidMonths < tx.months);
+    activeInstallments.forEach(inst => {
+        const purchaseDate = new Date(inst.date + 'T00:00:00');
+
+        // An installment payment is due in this cycle if the purchase was made before the next cutoff
+        if (nextCutoff > purchaseDate) {
+            // Check if a payment for this installment has already been made within this cycle
+            const hasBeenPaidThisCycle = card.transactions.some(p => 
+                p.relatedInstallmentId === inst.id &&
+                new Date(p.date + 'T00:00:00') > currentStatementCutoff &&
+                new Date(p.date + 'T00:00:00') <= nextCutoff
+            );
+
+            if (!hasBeenPaidThisCycle) {
+                nextPaymentAmount += inst.monthlyPayment;
             }
         }
     });

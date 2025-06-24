@@ -154,8 +154,20 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Esta compra a plazo ya está pagada en su totalidad.');
             return;
         }
+        
+        // NEW: Prompt for payment date
+        const todayStr = new Date().toISOString().split('T')[0];
+        const paymentDateStr = prompt(`¿En qué fecha se realizó el pago de ${formatCurrency(installment.monthlyPayment)}?\n(Mes ${installment.paidMonths + 1}/${installment.months})`, todayStr);
 
-        if (confirm(`¿Confirmar pago de ${formatCurrency(installment.monthlyPayment)} para "${installment.description}" (Mes ${installment.paidMonths + 1}/${installment.months})?`)) {
+        if (!paymentDateStr) return; // User cancelled prompt
+
+        // Basic validation for the date format
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(paymentDateStr)) {
+            alert("Formato de fecha inválido. Por favor usa AAAA-MM-DD.");
+            return;
+        }
+
+        if (confirm(`¿Confirmar pago con fecha ${paymentDateStr}?`)) {
             installment.paidMonths++;
             installment.remainingAmount -= installment.monthlyPayment;
             if (installment.remainingAmount < 0.01) installment.remainingAmount = 0; // Prevent negative floating point errors
@@ -164,8 +176,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const paymentTx = {
                 id: crypto.randomUUID(), // Unique ID
                 type: 'payment',
-                date: new Date().toISOString().split('T')[0], // Payment date is today
-                description: `Pago MSI: ${installment.description.split(' (Mes')[0]} (${installment.paidMonths}/${installment.months})`,
+                date: paymentDateStr, // Use user-provided date
+                description: `Pago MSI: ${installment.description} (${installment.paidMonths}/${installment.months})`,
                 amount: installment.monthlyPayment,
                 relatedInstallmentId: installment.id // Link to original installment
             };
@@ -191,20 +203,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const card = cards.find(c => c.id === cardId);
         if (card) {
-            const initialLength = card.transactions.length;
+            const transactionToDelete = card.transactions.find(tx => tx.id === transactionId);
+            if (!transactionToDelete) {
+                alert('Error: No se pudo encontrar el movimiento.');
+                return;
+            }
+
+            // If this is an installment payment, reverse the changes on the parent installment object.
+            if (transactionToDelete.type === 'payment' && transactionToDelete.relatedInstallmentId) {
+                const parentInstallment = card.transactions.find(tx => tx.id === transactionToDelete.relatedInstallmentId);
+                if (parentInstallment) {
+                    parentInstallment.paidMonths--;
+                    parentInstallment.remainingAmount += parentInstallment.monthlyPayment;
+                     // Clamp the value to the total amount to prevent floating point inaccuracies from making it larger
+                    if (parentInstallment.remainingAmount > parentInstallment.totalAmount) {
+                        parentInstallment.remainingAmount = parentInstallment.totalAmount;
+                    }
+                }
+            }
+
             // Filter out the transaction by its ID
             card.transactions = card.transactions.filter(tx => tx.id !== transactionId);
 
-            if (card.transactions.length < initialLength) {
-                alert('Movimiento eliminado con éxito.');
-                updateUI(); // Re-render the UI
-                // If the transaction detail modal is open for this card, refresh its content
-                if (transactionDetailModal.open && transactionDetailCardIdInput.value === cardId) {
-                    refreshTransactionDetailModal(cardId);
-                }
-            } else {
-                alert('Error: No se pudo encontrar el movimiento.');
+            alert('Movimiento eliminado con éxito.');
+            updateUI(); // Re-render the UI and save state
+
+            // If the transaction detail modal is open for this card, refresh its content
+            if (transactionDetailModal.open && transactionDetailCardIdInput.value === cardId) {
+                refreshTransactionDetailModal(cardId);
             }
+            // Also refresh the installment detail modal as its state has changed
+            if (installmentDetailModal.open && installmentDetailCardIdInput.value === cardId) {
+                refreshInstallmentDetailModal(cardId);
+            }
+            
         } else {
             console.error('Card not found for ID:', cardId);
             alert('Error: No se pudo encontrar la tarjeta asociada para eliminar el movimiento.');
